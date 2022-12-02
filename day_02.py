@@ -1,5 +1,5 @@
 def _parse(rawdata):
-    return rawdata.splitlines() 
+    return [line.split() for line in rawdata.splitlines()]
 
 
 def part_1(*lines):
@@ -13,9 +13,8 @@ def part_1(*lines):
     """
     score = 0
     for line in lines:
-        plays = line.split()
-        opponent =  "ABC".index(plays[0])
-        you = "XYZ".index(plays[1])
+        opponent =  "ABC".index(line[0])
+        you = "XYZ".index(line[1])
        
         # we have plays is 0-2 but need to inc score by 1-3
         score += you + 1
@@ -38,12 +37,10 @@ def part_2(*lines):
     ... '''))
     12
     """
-
     score = 0
     for line in lines:
-        plays = line.split()
-        opponent =  "ABC".index(plays[0])
-        result = plays[1]
+        opponent = "ABC".index(line[0])
+        result = line[1]
         
         if result == "X":
             score += (opponent - 1) % 3 + 1
