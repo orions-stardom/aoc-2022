@@ -1,6 +1,6 @@
 [[package]]
 name = "advent-of-code-data"
-version = "1.2.2"
+version = "1.3.0"
 summary = "Get your puzzle data with a single import"
 dependencies = [
     "beautifulsoup4",
@@ -155,9 +155,9 @@ lock_version = "4.0"
 content_hash = "sha256:0887507129ab27ad1a5e9ba71e865d4dfbcffe549dd857940cf221f19affab3e"
 
 [metadata.files]
-"advent-of-code-data 1.2.2" = [
-    {url = "https://files.pythonhosted.org/packages/1b/a6/841efe49a35fd6f52ac1eae19204094cd192f46c30218f3d75b22c959e42/advent_of_code_data-1.2.2-py2.py3-none-any.whl", hash = "sha256:688aa9d2ae22c157c3a3b622b8f5bd3ee80303834038d26524396e068fcd42ba"},
-    {url = "https://files.pythonhosted.org/packages/f7/a5/0d8889c482b6bbc8573f6592b685f03e66f8ea7820fa926269910e6e673a/advent-of-code-data-1.2.2.tar.gz", hash = "sha256:f2bd130d5589a35aec31b4c4cfdc081f7deb73ee749f9daf4bb35c5c1ceee072"},
+"advent-of-code-data 1.3.0" = [
+    {url = "https://files.pythonhosted.org/packages/6d/c9/f52db288d4d716b7e423c15956114ceeb5559fd4b816975de53bbee4028d/advent_of_code_data-1.3.0-py2.py3-none-any.whl", hash = "sha256:8c125c8d4a04aa83b76786e62ae7315ea7323fb419cadec77213f532b8c2006b"},
+    {url = "https://files.pythonhosted.org/packages/ec/d4/e4085c9798fb93e07fe3574867ad69b4553819aed860e2e95e084f215fa8/advent-of-code-data-1.3.0.tar.gz", hash = "sha256:732e63118bf1a59612a15ddcbcb2d9203c838abfed1faeb2c3153620d4cbb2fa"},
 ]
 "beautifulsoup4 4.11.1" = [
     {url = "https://files.pythonhosted.org/packages/9c/d8/909c4089dbe4ade9f9705f143c9f13f065049a9d5e7d34c828aefdd0a97c/beautifulsoup4-4.11.1-py3-none-any.whl", hash = "sha256:58d5c3d29f5a36ffeb94f02f0d786cd53014cf9b3b3951d42e0080d8a9498d30"},
