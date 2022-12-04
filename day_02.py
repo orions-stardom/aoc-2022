@@ -7,7 +7,7 @@ def part_1(*lines):
     >>> part_1(*_parse('''\
     ... A Y
     ... B X
-    ... C Z    
+    ... C Z
     ... '''))
     15
     """
@@ -15,7 +15,7 @@ def part_1(*lines):
     for line in lines:
         opponent =  "ABC".index(line[0])
         you = "XYZ".index(line[1])
-       
+
         # we have plays is 0-2 but need to inc score by 1-3
         score += you + 1
         if you == opponent:
@@ -25,7 +25,7 @@ def part_1(*lines):
         needed = (opponent + 1) % 3
         if you == needed:
             score += 6
-    
+
     return score
 
 def part_2(*lines):
@@ -33,7 +33,7 @@ def part_2(*lines):
     >>> part_2(*_parse('''\
     ... A Y
     ... B X
-    ... C Z    
+    ... C Z
     ... '''))
     12
     """
@@ -41,7 +41,7 @@ def part_2(*lines):
     for line in lines:
         opponent = "ABC".index(line[0])
         result = line[1]
-        
+
         if result == "X":
             score += (opponent - 1) % 3 + 1
         elif result == "Y":
@@ -49,5 +49,5 @@ def part_2(*lines):
         elif result == "Z":
             you = (opponent + 1) % 3
             score += (you + 1) + 6
-    
+
     return score

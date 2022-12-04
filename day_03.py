@@ -2,7 +2,7 @@ import more_itertools as mit
 import string
 
 def _parse(rawdata):
-    return [l.strip() for l in rawdata.splitlines()]
+    return rawdata.splitlines()
 
 def part_1(*rucksacks):
     r"""
@@ -12,7 +12,7 @@ def part_1(*rucksacks):
     ... PmmdzqPrVvPwwTWBwg
     ... wMqvLMZHhHMvwLHjbvcjnnSBnvTQFn
     ... ttgJtRGJQctTZtZT
-    ... CrZsJsPPZsGzwwsLwLmpwMDw    
+    ... CrZsJsPPZsGzwwsLwLmpwMDw
     ... '''))
     157
     """
@@ -32,7 +32,7 @@ def part_2(*rucksacks):
     ... PmmdzqPrVvPwwTWBwg
     ... wMqvLMZHhHMvwLHjbvcjnnSBnvTQFn
     ... ttgJtRGJQctTZtZT
-    ... CrZsJsPPZsGzwwsLwLmpwMDw    
+    ... CrZsJsPPZsGzwwsLwLmpwMDw
     ... '''))
     70
     """

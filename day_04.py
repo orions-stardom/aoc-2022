@@ -1,7 +1,7 @@
 from parse import parse
 
 def _parse(rawdata):
-    return [parse("{:d}-{:d},{:d}-{:d}", line.strip()) for line in rawdata.splitlines()]
+    return [parse("{:d}-{:d},{:d}-{:d}", line) for line in rawdata.splitlines()]
 
 def part_1(*lines):
     r"""
@@ -11,7 +11,7 @@ def part_1(*lines):
     ... 5-7,7-9
     ... 2-8,3-7
     ... 6-6,4-6
-    ... 2-6,4-8    
+    ... 2-6,4-8
     ... '''))
     2
     """
@@ -26,7 +26,7 @@ def part_2(*lines):
     ... 5-7,7-9
     ... 2-8,3-7
     ... 6-6,4-6
-    ... 2-6,4-8    
+    ... 2-6,4-8
     ... '''))
     4
     """
