@@ -6,7 +6,7 @@ def _parse(rawdata):
     instructions = [parse("move {:d} from {:d} to {:d}", line) for line in instructions_data.splitlines()]
 
     stack_lines = stack_data.splitlines()
-    stack = [[] for _ in stack_lines[-1].split()]
+    stacks = [[] for _ in stack_lines[-1].split()]
   
     stack_lines.pop(-1)
     stack_lines.reverse()
@@ -14,12 +14,12 @@ def _parse(rawdata):
     for line in stack_lines:
         for i, crate in enumerate(line[1::4]):
             if not crate.isspace():
-                stack[i].append(crate)
+                stacks[i].append(crate)
 
-    stack.insert(0, []) # all the instructions are 1 based :(
-    return stack, instructions
+    stacks.insert(0, []) # all the instructions are 1 based :(
+    return stacks, instructions
 
-def part_1(stack, instructions):
+def part_1(stacks, instructions):
     r"""
     >>> part_1(*_parse('''\
     ...     [D]    
@@ -36,13 +36,13 @@ def part_1(stack, instructions):
     """
     # theres probably a clever faster way but fuck it
     for n, src, dest in instructions:
-        stack[dest].extend(reversed(stack[src][-n::]))
-        del stack[src][-n:]
+        stacks[dest].extend(reversed(stacks[src][-n::]))
+        del stacks[src][-n:]
 
-    return "".join(s[-1] for s in stack[1:])
+    return "".join(s[-1] for s in stacks[1:])
 
 
-def part_2(stack, instructions):
+def part_2(stacks, instructions):
     r"""
     >>> part_2(*_parse('''\
     ...     [D]    
@@ -59,10 +59,10 @@ def part_2(stack, instructions):
     """
     # theres probably a clever faster way but fuck it
     for n, src, dest in instructions:
-        stack[dest].extend(stack[src][-n:])
-        del stack[src][-n:]
+        stacks[dest].extend(stacks[src][-n:])
+        del stacks[src][-n:]
 
-    return "".join(s[-1] for s in stack[1:])
+    return "".join(s[-1] for s in stacks[1:])
 
 
 if __name__ == "__main__":
