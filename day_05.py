@@ -36,8 +36,8 @@ def part_1(stack, instructions):
     """
     # theres probably a clever faster way but fuck it
     for n, src, dest in instructions:
-        for _ in range(n):
-            stack[dest].append(stack[src].pop())
+        stack[dest].extend(reversed(stack[src][-n::]))
+        del stack[src][-n:]
 
     return "".join(s[-1] for s in stack[1:])
 
