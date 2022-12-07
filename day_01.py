@@ -67,7 +67,7 @@ if __name__ == "__main__":
     for part in 1, 2:
         try:
             impl = globals()[f"part_{part}"]
-        except NameError:
+        except KeyError:
             print(f"No part {part} - skipping")
             continue
 
