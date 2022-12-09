@@ -1,44 +1,27 @@
 #!/usr/bin/env -S pdm run python
-from typing import NamedTuple
-import math
 import more_itertools as mit
 
 def _parse(rawdata):
     return [(line.split()[0], int(line.split()[1])) for line in rawdata.splitlines()]
 
-class Point(NamedTuple):
-    x: int
-    y: int
+def follow(t, h):
+    delta = h - t
+    dx, dy = abs(delta.real), abs(delta.imag)
+    if dx > 1 and dy <= 1:
+        return complex((h.real+t.real)//2, h.imag)
+    elif dx <= 1 and dy > 1:
+        return complex(h.real, (h.imag+t.imag)//2)
+    elif dx > 1 and dy > 1:
+        return complex((h.real+t.real)//2,(h.imag+t.imag)//2)
 
-    def __add__(self, d):
-        dx, dy = d
-        return Point(self.x+dx, self.y+dy)
-
-    def __sub__(self, p):
-        return (self.x - p.x, self.y - p.y)
-
-    def __repr__(self):
-        return f"({self.x}, {self.y})"
-
-    def follow(self, h):
-        dx, dy = abs(h.x-self.x), abs(h.y-self.y)
-        if dx > 1 and dy <= 1:
-            return Point((h.x+self.x)//2, h.y)
-        elif dx <= 1 and dy > 1:
-            return Point(h.x, (h.y+self.y)//2)
-        elif dx > 1 and dy > 1:
-            return Point((h.x+self.x)//2,(h.y+self.y)//2)
-
-        return self
-
+    return t
 
 directions = {
-    "R": (1,0),
-    "L": (-1, 0),
-    "U": (0,1),
-    "D": (0,-1)
+    "R": 1+0j,
+    "L": -1+ 0j,
+    "U": 0+1j,
+    "D": 0+-1j
 }
-
 
 def part_1(*lines):
     r"""
@@ -54,8 +37,8 @@ def part_1(*lines):
     ... '''))
     13
     """
-    h = Point(0,0)
-    t = Point(0,0)
+    h = 0+0j
+    t = 0+0j
     visited = {t}
 
     for d,n in lines:
@@ -63,7 +46,7 @@ def part_1(*lines):
 
         for _ in range(n):
             h += delta
-            t = t.follow(h) 
+            t = follow(t, h) 
             visited.add(t)
             
     return len(visited)
@@ -95,7 +78,7 @@ def part_2(*lines):
     ... '''))
     36
     """
-    knots = [Point(0,0) for _ in range(10)]
+    knots = [0+0j] * 10
     visited = {knots[-1]}
 
     for d,n in lines:
@@ -104,12 +87,7 @@ def part_2(*lines):
         for _ in range(n):
             knots[0] += delta
             for i,j in mit.pairwise(range(len(knots))):
-                knots[j] = knots[j].follow(knots[i])
-                # dx, dy = abs(knots[i].x-knots[j].x), abs(knots[i].y-knots[j].y)
-                # if dx > 1:
-                #     knots[j] = Point((knots[i].x+knots[j].x)//2, knots[i].y)
-                # elif dy > 1:
-                #     knots[j] = Point(knots[i].x, (knots[i].y+knots[j].y)//2)
+                knots[j] = follow(knots[j], knots[i])
             
             visited.add(knots[-1])
     
