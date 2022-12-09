@@ -1,4 +1,11 @@
-nnoremap gV 0P<c-v>`]I... <Esc>gv>gv:s/\s\+$//e<CR>:nohl<CR>
+function! s:PasteDocTest()
+	let indent=getline(".")->matchstr('\v^\s+')
+	exec "normal! o\<esc>p0\<c-v>`]I".l:indent."... \<esc>"
+	if @+[0] == '^\n'
+		normal k dd
+	endif
+endfunction
+nnoremap gV :call <sid>PasteDocTest()<CR>
 
 function! s:Advent(day) abort
 	if !(a:day >= 1 && a:day <= 25)
