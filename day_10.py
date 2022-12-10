@@ -9,7 +9,7 @@ class Device:
         self.cycle = 0
         self.total_signal = 0
 
-        self.pixels = [["."]*40 for _ in range(6)]
+        self.pixels = [[" "]*40 for _ in range(6)]
 
         for instruction in instructions:
             if instruction == "noop":
@@ -29,7 +29,7 @@ class Device:
 
         sprite = (self.X - 1, self.X, self.X + 1)
         draw_y, draw_x = divmod(self.cycle-1, 40)
-        self.pixels[draw_y][draw_x] = "#" if draw_x in sprite else "."
+        self.pixels[draw_y][draw_x] = "#" if draw_x in sprite else " "
 
     @property
     def picture(self):
@@ -340,12 +340,12 @@ def part_2(*lines):
     ... noop
     ... noop
     ... '''))
-    ##..##..##..##..##..##..##..##..##..##..
-    ###...###...###...###...###...###...###.
-    ####....####....####....####....####....
-    #####.....#####.....#####.....#####.....
-    ######......######......######......####
-    #######.......#######.......#######.....
+    ##  ##  ##  ##  ##  ##  ##  ##  ##  ##  
+    ###   ###   ###   ###   ###   ###   ### 
+    ####    ####    ####    ####    ####    
+    #####     #####     #####     #####     
+    ######      ######      ######      ####
+    #######       #######       #######     
     """
     print(Device(lines).picture)
 
