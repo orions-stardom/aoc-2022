@@ -35,6 +35,9 @@ if __name__ == "__main__":
             continue
 
         solution = impl(*_parse(puzzle_input))
-        print(f"Solution to part {part}: ", solution, sep="\n")
-        # aocd uses parts a and b for some reason, even though AOC uses parts One and Two
-        aocd.submit(solution, part='ab'[part-1], reopen=False)
+        if solution is not None:
+            print(f"Solution to part {part}: ", solution, sep="\n")
+            # aocd uses parts a and b for some reason, even though AOC uses parts One and Two
+            aocd.submit(solution, part='ab'[part-1], reopen=False)
+        else:
+            print("No solution to part {part} {might need to be entered manually?)")
