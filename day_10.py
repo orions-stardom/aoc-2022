@@ -24,7 +24,7 @@ class Device:
     def run_cycle(self):
         self.cycle += 1
         
-        if not (self.cycle - 20) % 40:
+        if self.cycle % 40 == 20:
             self.total_signal += self.cycle * self.X
 
         sprite = (self.X - 1, self.X, self.X + 1)
