@@ -1,30 +1,31 @@
 #!/usr/bin/env -S pdm run python
 
-def _parse(rawdata):
-    root = Dir(None)
-    current = root
-    for line in rawdata.splitlines():
-        if line.startswith("$ cd "):
-            target = line.removeprefix("$ cd ")
-            if target == "/":
-                current = root
-            elif target == "..":
-                current = current.parent
-            else:
-                current = current.subdirs[target]
-        elif line.startswith("$ ls"):
-            continue
-        else:
-            # assume anything else is part of a listing
-            size, name = line.split()
-            if size == "dir":
-                current.subdirs[name] = Dir(current)
-            else:
-                current.files[name] = int(size)
-
-    return [root]
-
 class Dir:
+    @classmethod
+    def parse(cls, listing):
+        root = Dir(None)
+        current = root
+        for line in listing.splitlines():
+            if line.startswith("$ cd "):
+                target = line.removeprefix("$ cd ")
+                if target == "/":
+                    current = root
+                elif target == "..":
+                    current = current.parent
+                else:
+                    current = current.subdirs[target]
+            elif line.startswith("$ ls"):
+                continue
+            else:
+                # assume anything else is part of a listing
+                size, name = line.split()
+                if size == "dir":
+                    current.subdirs[name] = Dir(current)
+                else:
+                    current.files[name] = int(size)
+
+        return root
+
     def __init__(self, parent):
         self.files = {}
         self.subdirs = {}
@@ -39,9 +40,9 @@ class Dir:
         for d in self.subdirs.values():
             yield from d.walk()
 
-def part_1(root):
+def part_1(rawdata):
     r"""
-    >>> part_1(*_parse('''\
+    >>> part_1('''\
     ... $ cd /
     ... $ ls
     ... dir a
@@ -65,14 +66,15 @@ def part_1(root):
     ... 8033020 d.log
     ... 5626152 d.ext
     ... 7214296 k
-    ... '''))
+    ... ''')
     95437
     """
+    root = Dir.parse(rawdata)
     return sum(r.size for r in root.walk() if r.size <= 100000)
 
-def part_2(root):
+def part_2(rawdata):
     r"""
-    >>> part_2(*_parse('''\
+    >>> part_2('''\
     ... $ cd /
     ... $ ls
     ... dir a
@@ -96,9 +98,10 @@ def part_2(root):
     ... 8033020 d.log
     ... 5626152 d.ext
     ... 7214296 k
-    ... '''))
+    ... ''')
     24933642
     """
+    root = Dir.parse(rawdata)
     needed = 30000000
     current = 70000000 - root.size
     return min(r.size for r in root.walk() if current + r.size >= needed)
@@ -126,7 +129,7 @@ if __name__ == "__main__":
             print(f"No part {part} - skipping")
             continue
 
-        solution = impl(*_parse(puzzle_input))
+        solution = impl(puzzle_input)
         print(f"Solution to part {part}: ", solution, sep="\n")
         # aocd uses parts a and b for some reason, even though AOC uses parts One and Two
         aocd.submit(solution, part='ab'[part-1], reopen=False)

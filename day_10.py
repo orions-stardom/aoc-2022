@@ -1,8 +1,5 @@
 #!/usr/bin/env -S pdm run python
 
-def _parse(rawdata):
-    return [Device(rawdata)]
-
 class Device:
     r"""
     >>> d = Device('''\
@@ -194,11 +191,11 @@ class Device:
     def picture(self):
         return "\n".join("".join(row) for row in self.pixels)
 
-def part_1(d):
-    return d.total_signal
+def part_1(rawdata):
+    return Device(rawdata).total_signal
 
-def part_2(d):
-    print(d.picture)
+def part_2(rawdata):
+    print(Device(rawdata).picture)
 
 if __name__ == "__main__":
     import aocd
@@ -223,7 +220,7 @@ if __name__ == "__main__":
             print(f"No part {part} - skipping")
             continue
 
-        solution = impl(*_parse(puzzle_input))
+        solution = impl(puzzle_input)
         if solution is not None:
             print(f"Solution to part {part}: ", solution, sep="\n")
             # aocd uses parts a and b for some reason, even though AOC uses parts One and Two

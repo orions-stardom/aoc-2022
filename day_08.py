@@ -3,34 +3,35 @@ import numpy as np
 import itertools as it
 import more_itertools as mit
 
-def _parse(rawdata):
-    return [np.array([[int(x) for x in line] for line in rawdata.splitlines()])]
+def parse_grid(rawdata):
+    return np.array([[int(x) for x in line] for line in rawdata.splitlines()])
 
-def part_1(trees):
+def part_1(rawdata):
     r"""
-    >>> part_1(*_parse('''\
+    >>> part_1('''\
     ... 30373
     ... 25512
     ... 65332
     ... 33549
     ... 35390
-    ... '''))
+    ... ''')
     21
     """
+    trees = parse_grid(rawdata)
     def is_visible(x,y,h):
         return np.all(trees[:x,y] < h) or np.all(trees[x+1:,y] < h) or np.all(trees[x,:y] < h) or np.all(trees[x,y+1:] < h)
         
     return sum(is_visible(x,y,h) for (x,y),h in np.ndenumerate(trees)) 
 
-def part_2(trees):
+def part_2(rawdata):
     r"""
-    >>> part_2(*_parse('''\
+    >>> part_2('''\
     ... 30373
     ... 25512
     ... 65332
     ... 33549
     ... 35390
-    ... '''))
+    ... ''')
     8
     """
     def scenic_score(idx,h):
@@ -45,7 +46,9 @@ def part_2(trees):
 
             return n
         
-        return n_visible(np.array((0,1))) * n_visible(np.array((0,-1))) * n_visible(np.array((1, 0))) * n_visible(np.array((-1, 0)))    # breakpoint() 
+        return n_visible(np.array((0,1))) * n_visible(np.array((0,-1))) * n_visible(np.array((1, 0))) * n_visible(np.array((-1, 0)))
+    
+    trees = parse_grid(rawdata)
     return max(scenic_score(idx,h) for idx,h in np.ndenumerate(trees)) 
 
 if __name__ == "__main__":
@@ -71,7 +74,7 @@ if __name__ == "__main__":
             print(f"No part {part} - skipping")
             continue
 
-        solution = impl(*_parse(puzzle_input))
+        solution = impl(puzzle_input)
         print(f"Solution to part {part}: ", solution, sep="\n")
         # aocd uses parts a and b for some reason, even though AOC uses parts One and Two
         aocd.submit(solution, part='ab'[part-1], reopen=False)

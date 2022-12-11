@@ -1,37 +1,37 @@
 #!/usr/bin/env -S pdm run python
 from parse import parse
 
-def _parse(rawdata):
+def ranges(rawdata):
     return [parse("{:d}-{:d},{:d}-{:d}", line) for line in rawdata.splitlines()]
 
-def part_1(*lines):
+def part_1(rawdata):
     r"""
-    >>> part_1(*_parse('''\
+    >>> part_1('''\
     ... 2-4,6-8
     ... 2-3,4-5
     ... 5-7,7-9
     ... 2-8,3-7
     ... 6-6,4-6
     ... 2-6,4-8
-    ... '''))
+    ... ''')
     2
     """
-    return sum((a>=c and b<=d) or (c>=a and d<=b) for a,b,c,d in lines)
+    return sum((a>=c and b<=d) or (c>=a and d<=b) for a,b,c,d in ranges(rawdata))
 
 
-def part_2(*lines):
+def part_2(rawdata):
     r"""
-    >>> part_2(*_parse('''\
+    >>> part_2('''\
     ... 2-4,6-8
     ... 2-3,4-5
     ... 5-7,7-9
     ... 2-8,3-7
     ... 6-6,4-6
     ... 2-6,4-8
-    ... '''))
+    ... ''')
     4
     """
-    return sum(bool(set(range(a,b+1))&set(range(c,d+1))) for a,b,c,d in lines)
+    return sum(bool(set(range(a,b+1))&set(range(c,d+1))) for a,b,c,d in ranges(rawdata))
 
 if __name__ == "__main__":
     import aocd
@@ -56,7 +56,7 @@ if __name__ == "__main__":
             print(f"No part {part} - skipping")
             continue
 
-        solution = impl(*_parse(puzzle_input))
+        solution = impl(puzzle_input)
         print(f"Solution to part {part}: ", solution, sep="\n")
         # aocd uses parts a and b for some reason, even though AOC uses parts One and Two
         aocd.submit(solution, part='ab'[part-1], reopen=False)

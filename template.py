@@ -1,14 +1,11 @@
 #!/usr/bin/env -S pdm run python
 
-def _parse(rawdata):
-    return rawdata.splitlines() 
-
-def part_1(*lines):
+def part_1(rawdata):
     r"""
-    >>> part_1(*_parse('''\
-    ... '''))
+    >>> part_1('''\
+    ... ''')
     """
-    pass
+    data = rawdata.splitlines()
 
 
 if __name__ == "__main__":
@@ -34,7 +31,7 @@ if __name__ == "__main__":
             print(f"No part {part} - skipping")
             continue
 
-        solution = impl(*_parse(puzzle_input))
+        solution = impl(puzzle_input)
         if solution is not None:
             print(f"Solution to part {part}: ", solution, sep="\n")
             # aocd uses parts a and b for some reason, even though AOC uses parts One and Two

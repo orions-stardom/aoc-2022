@@ -1,7 +1,7 @@
 #!/usr/bin/env -S pdm run python
 import more_itertools as mit
 
-def _parse(rawdata):
+def moves(rawdata):
     return [(line.split()[0], int(line.split()[1])) for line in rawdata.splitlines()]
 
 def follow(t, h):
@@ -23,9 +23,9 @@ directions = {
     "D": 0+-1j
 }
 
-def part_1(*lines):
+def part_1(rawdata):
     r"""
-    >>> part_1(*_parse('''\
+    >>> part_1('''\
     ... R 4
     ... U 4
     ... L 3
@@ -34,14 +34,14 @@ def part_1(*lines):
     ... D 1
     ... L 5
     ... R 2
-    ... '''))
+    ... ''')
     13
     """
     h = 0+0j
     t = 0+0j
     visited = {t}
 
-    for d,n in lines:
+    for d,n in moves(rawdata):
         delta = directions[d]
 
         for _ in range(n):
@@ -52,9 +52,9 @@ def part_1(*lines):
     return len(visited)
 
 
-def part_2(*lines):
+def part_2(rawdata):
     r"""
-    >>> part_2(*_parse('''\
+    >>> part_2('''\
     ... R 4
     ... U 4
     ... L 3
@@ -63,10 +63,10 @@ def part_2(*lines):
     ... D 1
     ... L 5
     ... R 2
-    ... '''))
+    ... ''')
     1
 
-    >>> part_2(*_parse('''\
+    >>> part_2('''\
     ... R 5
     ... U 8
     ... L 8
@@ -75,13 +75,13 @@ def part_2(*lines):
     ... D 10
     ... L 25
     ... U 20
-    ... '''))
+    ... ''')
     36
     """
     knots = [0+0j] * 10
     visited = {knots[-1]}
 
-    for d,n in lines:
+    for d,n in moves(rawdata):
         delta = directions[d]
 
         for _ in range(n):
@@ -116,7 +116,7 @@ if __name__ == "__main__":
             print(f"No part {part} - skipping")
             continue
 
-        solution = impl(*_parse(puzzle_input))
+        solution = impl(puzzle_input)
         print(f"Solution to part {part}: ", solution, sep="\n")
         # aocd uses parts a and b for some reason, even though AOC uses parts One and Two
         aocd.submit(solution, part='ab'[part-1], reopen=False)

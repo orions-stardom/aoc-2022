@@ -1,7 +1,7 @@
 #!/usr/bin/env -S pdm run python
 from parse import parse
 
-def _parse(rawdata):
+def parse_state(rawdata):
     stack_data, instructions_data = rawdata.split("\n\n")
     instructions = [parse("move {:d} from {:d} to {:d}", line) for line in instructions_data.splitlines()]
 
@@ -19,9 +19,9 @@ def _parse(rawdata):
     stacks.insert(0, []) # all the instructions are 1 based :(
     return stacks, instructions
 
-def part_1(stacks, instructions):
+def part_1(rawdata):
     r"""
-    >>> part_1(*_parse('''\
+    >>> part_1('''\
     ...     [D]    
     ... [N] [C]    
     ... [Z] [M] [P]
@@ -31,9 +31,10 @@ def part_1(stacks, instructions):
     ... move 3 from 1 to 3
     ... move 2 from 2 to 1
     ... move 1 from 1 to 2
-    ... '''))
+    ... ''')
     'CMZ'
     """
+    stacks, instructions = parse_state(rawdata)
     # theres probably a clever faster way but fuck it
     for n, src, dest in instructions:
         stacks[dest].extend(reversed(stacks[src][-n::]))
@@ -42,9 +43,9 @@ def part_1(stacks, instructions):
     return "".join(s[-1] for s in stacks[1:])
 
 
-def part_2(stacks, instructions):
+def part_2(rawdata):
     r"""
-    >>> part_2(*_parse('''\
+    >>> part_2('''\
     ...     [D]    
     ... [N] [C]    
     ... [Z] [M] [P]
@@ -54,9 +55,10 @@ def part_2(stacks, instructions):
     ... move 3 from 1 to 3
     ... move 2 from 2 to 1
     ... move 1 from 1 to 2
-    ... '''))
+    ... ''')
     'MCD'
     """
+    stacks, instructions = parse_state(rawdata)
     # theres probably a clever faster way but fuck it
     for n, src, dest in instructions:
         stacks[dest].extend(stacks[src][-n:])
@@ -88,7 +90,7 @@ if __name__ == "__main__":
             print(f"No part {part} - skipping")
             continue
 
-        solution = impl(*_parse(puzzle_input))
+        solution = impl(puzzle_input)
         print(f"Solution to part {part}: ", solution, sep="\n")
         # aocd uses parts a and b for some reason, even though AOC uses parts One and Two
         aocd.submit(solution, part='ab'[part-1], reopen=False)

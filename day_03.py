@@ -2,19 +2,16 @@
 import more_itertools as mit
 import string
 
-def _parse(rawdata):
-    return rawdata.splitlines()
-
-def part_1(*rucksacks):
+def part_1(rawdata):
     r"""
-    >>> part_1(*_parse('''\
+    >>> part_1('''\
     ... vJrwpWtwJgWrhcsFMMfFFhFp
     ... jqHRNqRjqzjGDLGLrsFMfFZSrLrFZsSL
     ... PmmdzqPrVvPwwTWBwg
     ... wMqvLMZHhHMvwLHjbvcjnnSBnvTQFn
     ... ttgJtRGJQctTZtZT
     ... CrZsJsPPZsGzwwsLwLmpwMDw
-    ... '''))
+    ... ''')
     157
     """
     def split(rucksack):
@@ -22,24 +19,27 @@ def part_1(*rucksacks):
         return rucksack[:size], rucksack[size:]
     def common(r1, r2):
         return mit.only(set(r1) & set(r2))
+   
+    rucksacks = rawdata.splitlines()
     return sum(string.ascii_letters.index(common(*r))+1 for r in map(split, rucksacks))
 
 
-def part_2(*rucksacks):
+def part_2(rawdata):
     r"""
-    >>> part_2(*_parse('''\
+    >>> part_2('''\
     ... vJrwpWtwJgWrhcsFMMfFFhFp
     ... jqHRNqRjqzjGDLGLrsFMfFZSrLrFZsSL
     ... PmmdzqPrVvPwwTWBwg
     ... wMqvLMZHhHMvwLHjbvcjnnSBnvTQFn
     ... ttgJtRGJQctTZtZT
     ... CrZsJsPPZsGzwwsLwLmpwMDw
-    ... '''))
+    ... ''')
     70
     """
     def common(r1, r2, r3):
         return mit.only(set(r1) & set(r2) & set(r3))
 
+    rucksacks = rawdata.splitlines()
     return sum(string.ascii_letters.index(common(*g))+1 for g in mit.chunked(rucksacks, 3))
 
 if __name__ == "__main__":
@@ -65,7 +65,7 @@ if __name__ == "__main__":
             print(f"No part {part} - skipping")
             continue
 
-        solution = impl(*_parse(puzzle_input))
+        solution = impl(puzzle_input)
         print(f"Solution to part {part}: ", solution, sep="\n")
         # aocd uses parts a and b for some reason, even though AOC uses parts One and Two
         aocd.submit(solution, part='ab'[part-1], reopen=False)

@@ -1,60 +1,57 @@
 #!/usr/bin/env -S pdm run python
 
-def _parse(rawdata):
-    return [rawdata] # easier than unsplattng it everywhere... marginally
-
-def part_1(line):
+def part_1(rawdata):
     r"""
-    >>> part_1(*_parse('''\
+    >>> part_1('''\
     ... mjqjpqmgbljsphdztnvjfqwrcgsmlb
-    ... '''))
+    ... ''')
     7
-    >>> part_1(*_parse('''\
+    >>> part_1('''\
     ... bvwbjplbgvbhsrlpgdmjqwftvncz
-    ... '''))
+    ... ''')
     5
-    >>> part_1(*_parse('''\
+    >>> part_1('''\
     ... nppdvjthqldpwncqszvftbrmjlhg
-    ... '''))
+    ... ''')
     6
-    >>> part_1(*_parse('''\
+    >>> part_1('''\
     ... nznrnfrfntjfmvfwmzdfjlvtqnbhcprsg
-    ... '''))
+    ... ''')
     10
-    >>> part_1(*_parse('''\
+    >>> part_1('''\
     ... zcfzfwzzqfrljwzlrfnpqdbhtmscgvjw
-    ... '''))
+    ... ''')
     11
     """
-    for i in range(4, len(line)):
-        if len(set(line[i-4:i])) == 4:
+    for i in range(4, len(rawdata)):
+        if len(set(rawdata[i-4:i])) == 4:
             return i
 
-def part_2(line):
+def part_2(rawdata):
     r"""
-    >>> part_2(*_parse('''\
+    >>> part_2('''\
     ... mjqjpqmgbljsphdztnvjfqwrcgsmlb
-    ... '''))
+    ... ''')
     19
-    >>> part_2(*_parse('''\
+    >>> part_2('''\
     ... bvwbjplbgvbhsrlpgdmjqwftvncz
-    ... '''))
+    ... ''')
     23
-    >>> part_2(*_parse('''\
+    >>> part_2('''\
     ... nppdvjthqldpwncqszvftbrmjlhg
-    ... '''))
+    ... ''')
     23
-    >>> part_2(*_parse('''\
+    >>> part_2('''\
     ... nznrnfrfntjfmvfwmzdfjlvtqnbhcprsg
-    ... '''))
+    ... ''')
     29
-    >>> part_2(*_parse('''\
+    >>> part_2('''\
     ... zcfzfwzzqfrljwzlrfnpqdbhtmscgvjw
-    ... '''))
+    ... ''')
     26
     """
-    for i in range(14, len(line)):
-        if len(set(line[i-14:i])) == 14:
+    for i in range(14, len(rawdata)):
+        if len(set(rawdata[i-14:i])) == 14:
             return i
 
 if __name__ == "__main__":
@@ -80,7 +77,7 @@ if __name__ == "__main__":
             print(f"No part {part} - skipping")
             continue
 
-        solution = impl(*_parse(puzzle_input))
+        solution = impl(puzzle_input)
         print(f"Solution to part {part}: ", solution, sep="\n")
         # aocd uses parts a and b for some reason, even though AOC uses parts One and Two
         aocd.submit(solution, part='ab'[part-1], reopen=False)

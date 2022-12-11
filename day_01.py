@@ -1,12 +1,12 @@
 #!/usr/bin/env -S pdm run python
 import heapq
   
-def _parse(rawdata):
-    return [[int(x) for x in group.splitlines()] for group in rawdata.split("\n\n")]
+def elves(rawdata):
+    return [sum(int(x) for x in group.splitlines()) for group in rawdata.split("\n\n")]
 
-def part_1(*elves):
+def part_1(rawdata):
     r"""
-    >>> part_1(*_parse('''\
+    >>> part_1('''\
     ... 1000
     ... 2000
     ... 3000
@@ -21,14 +21,14 @@ def part_1(*elves):
     ... 9000
     ...
     ... 10000
-    ... '''))
+    ... ''')
     24000
     """
-    return max(sum(e) for e in elves)
+    return max(elves(rawdata))
 
-def part_2(*elves):
+def part_2(rawdata):
     r"""
-    >>> part_2(*_parse('''\
+    >>> part_2('''\
     ... 1000
     ... 2000
     ... 3000
@@ -43,10 +43,10 @@ def part_2(*elves):
     ... 9000
     ...
     ... 10000
-    ... '''))
+    ... ''')
     45000
     """
-    return sum(heapq.nlargest(3, (sum(e) for e in elves)))
+    return sum(heapq.nlargest(3, elves(rawdata)))
 
 if __name__ == "__main__":
     import aocd
@@ -71,7 +71,7 @@ if __name__ == "__main__":
             print(f"No part {part} - skipping")
             continue
 
-        solution = impl(*_parse(puzzle_input))
+        solution = impl(puzzle_input)
         print(f"Solution to part {part}: ", solution, sep="\n")
         # aocd uses parts a and b for some reason, even though AOC uses parts One and Two
         aocd.submit(solution, part='ab'[part-1], reopen=False)
