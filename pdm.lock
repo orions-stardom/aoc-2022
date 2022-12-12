@@ -152,7 +152,7 @@ summary = "HTTP library with thread-safe connection pooling, file post, and more
 
 [metadata]
 lock_version = "4.0"
-content_hash = "sha256:0887507129ab27ad1a5e9ba71e865d4dfbcffe549dd857940cf221f19affab3e"
+content_hash = "sha256:f9d965d916bd8c69cd201d8b77ef8604589fd438da113c05f6e1d5a109961e36"
 
 [metadata.files]
 "advent-of-code-data 1.3.0" = [
