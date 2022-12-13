@@ -6,27 +6,17 @@ Packet = "list[int|'Packet']"
 
 def in_order(left:Packet, right:Packet):
     for l, r in zip(left, right):
-        if l == r:
-            continue
-        if isinstance(l, int) and isinstance(r, int):
-            if l < r:
-                return True
-            if l > r:
-                return False
-        elif isinstance(l, list) and isinstance(r, list): 
-            return in_order(l,r)
-        else: 
-            new_l, new_r = [l] if isinstance(l, int) else l, [r] if isinstance(r, int) else r
-            return in_order(new_l, new_r)
+        match l,r:
+            case int(), int() if l != r:
+                return l < r
+            case list(), list() if l != r:
+                return in_order(l,r)
+            case int(), list():
+                return in_order([l], r)
+            case list(), int():
+                return in_order(l, [r])
 
-    if len(left) < len(right):
-        return True
-    if len(right) < len(left):
-        return False
-
-    # being equal at this poitn isnt in the instructions but
-    return True
-    # ... I guess?
+    return len(left) <= len(right)
 
 def packets(rawdata:str):
     pairs = rawdata.split("\n\n")
