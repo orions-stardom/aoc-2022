@@ -6,23 +6,21 @@ class Dir:
         root = Dir(None)
         current = root
         for line in listing.splitlines():
-            if line.startswith("$ cd "):
-                target = line.removeprefix("$ cd ")
-                if target == "/":
+            match line.split():
+                case ["$", "cd", "/"]:
                     current = root
-                elif target == "..":
+                case ["$", "cd", ".."]:
                     current = current.parent
-                else:
+                case ["$", "cd", target]:
                     current = current.subdirs[target]
-            elif line.startswith("$ ls"):
-                continue
-            else:
-                # assume anything else is part of a listing
-                size, name = line.split()
-                if size == "dir":
+                case ["$", "ls"]:
+                    continue
+                case ["dir", name]:
                     current.subdirs[name] = Dir(current)
-                else:
+                case [size, name]:
                     current.files[name] = int(size)
+                case _:
+                    raise ValueError(line)
 
         return root
 
