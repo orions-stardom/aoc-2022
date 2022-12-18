@@ -66,6 +66,58 @@ def part_1(rawdata):
     return max_flow(frozenset(), "AA", 30)
 
 
+def part_1_smarter(rawdata):
+    r"""
+    >>> part_1_smarter('''\
+    ... Valve AA has flow rate=0; tunnels lead to valves DD, II, BB
+    ... Valve BB has flow rate=13; tunnels lead to valves CC, AA
+    ... Valve CC has flow rate=2; tunnels lead to valves DD, BB
+    ... Valve DD has flow rate=20; tunnels lead to valves CC, AA, EE
+    ... Valve EE has flow rate=3; tunnels lead to valves FF, DD
+    ... Valve FF has flow rate=0; tunnels lead to valves EE, GG
+    ... Valve GG has flow rate=0; tunnels lead to valves FF, HH
+    ... Valve HH has flow rate=22; tunnel leads to valve GG
+    ... Valve II has flow rate=0; tunnels lead to valves AA, JJ
+    ... Valve JJ has flow rate=21; tunnel leads to valve II
+    ... ''')
+    1651
+    """
+    graph = build_graph(rawdata)
+    distances = nx.floyd_warshall(graph)
+
+    working_valves = {v for v in graph if graph.nodes[v]["rate"] > 0}
+
+    @cache
+    def max_flow(open_valves, current_position, minutes_left) -> int:
+        flow_this_minute = sum(graph.nodes[v]["rate"] for v in open_valves)
+
+        if current_position != "AA":
+            # spend a minute opening this valve
+            # but skip this at the start with the broken valve 
+            minutes_left -= 1
+            open_valves |= {current_position}
+
+        travel_flow = flow_this_minute + graph.nodes[current_position]["rate"]
+
+        best_so_far = -1
+
+        for to_valve in working_valves - open_valves:
+            travel_time = int(distances[current_position][to_valve])
+            if travel_time > minutes_left:
+                continue
+
+            consider = travel_time * travel_flow + max_flow(open_valves, to_valve, minutes_left-travel_time)
+            best_so_far = max(best_so_far, consider)
+
+        if best_so_far == -1:
+            # if we cant get to any other openable valves in time we need to
+            # wait around and let current pressure out until the time runs out
+            return flow_this_minute + flow_this_minute * minutes_left
+
+        return best_so_far + flow_this_minute
+
+    return max_flow(frozenset(), "AA", 30)
+
 def part_2(rawdata):
     r"""
     >>> part_2('''\
