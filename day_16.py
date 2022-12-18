@@ -4,6 +4,7 @@ from parse import parse
 from functools import cache
 import networkx as nx
 import itertools as it
+import more_itertools as mit
 
 def parse_line(line:str) -> tuple[str,int,list[str]]:
     """
@@ -28,9 +29,9 @@ def build_graph(rawdata:str) -> nx.Graph:
 
     return graph
 
-def part_1(rawdata):
+def part_1_naive(rawdata):
     r"""
-    >>> part_1('''\
+    >>> part_1_naive('''\
     ... Valve AA has flow rate=0; tunnels lead to valves DD, II, BB
     ... Valve BB has flow rate=13; tunnels lead to valves CC, AA
     ... Valve CC has flow rate=2; tunnels lead to valves DD, BB
@@ -66,9 +67,9 @@ def part_1(rawdata):
     return max_flow(frozenset(), "AA", 30)
 
 
-def part_1_smarter(rawdata):
+def part_1(rawdata):
     r"""
-    >>> part_1_smarter('''\
+    >>> part_1('''\
     ... Valve AA has flow rate=0; tunnels lead to valves DD, II, BB
     ... Valve BB has flow rate=13; tunnels lead to valves CC, AA
     ... Valve CC has flow rate=2; tunnels lead to valves DD, BB
@@ -103,20 +104,21 @@ def part_1_smarter(rawdata):
 
         for to_valve in working_valves - open_valves:
             travel_time = int(distances[current_position][to_valve])
-            if travel_time > minutes_left:
+            if travel_time >= minutes_left:
                 continue
 
-            consider = travel_time * travel_flow + max_flow(open_valves, to_valve, minutes_left-travel_time)
+            consider = travel_time*travel_flow + max_flow(open_valves, to_valve, minutes_left-travel_time)
             best_so_far = max(best_so_far, consider)
 
         if best_so_far == -1:
             # if we cant get to any other openable valves in time we need to
             # wait around and let current pressure out until the time runs out
-            return flow_this_minute + flow_this_minute * minutes_left
+            return flow_this_minute + travel_flow * minutes_left
 
         return best_so_far + flow_this_minute
 
     return max_flow(frozenset(), "AA", 30)
+
 
 def part_2(rawdata):
     r"""
@@ -135,45 +137,43 @@ def part_2(rawdata):
     1707
     """
     graph = build_graph(rawdata)
+    distances = nx.floyd_warshall(graph)
 
-    # cache things manually so we can treat you/elephant positions interchangably
-    cache = {}
-    def max_flow(open_valves, you, elephant, minutes_left) -> int:
-        if minutes_left == 0:
-            return 0
-        if (state := (open_valves, you, elephant, minutes_left)) in cache:
-            return cache[state]
-        if (state := (open_valves, elephant, you, minutes_left)) in cache:
-            return cache[state]
+    working_valves = {v for v in graph if graph.nodes[v]["rate"] > 0}
 
+    @cache
+    def max_flow(open_valves, allowed_valves, current_position, minutes_left) -> int:
         flow_this_minute = sum(graph.nodes[v]["rate"] for v in open_valves)
 
-        best_so_far = 0
-        you_can_open = you not in open_valves and graph.nodes[you]["rate"] > 0
-        elephant_can_open = elephant not in open_valves and graph.nodes[elephant]["rate"] > 0
+        if current_position != "AA":
+            # spend a minute opening this valve
+            # but skip this at the start with the broken valve 
+            minutes_left -= 1
+            open_valves |= {current_position}
 
-        if you_can_open and elephant_can_open and you != elephant:
-            best_so_far = max_flow(open_valves|{you, elephant}, you, elephant, minutes_left-1)
-        
-        if you_can_open:
-            for to_valve in graph[elephant]:
-                consider = max_flow(open_valves|{you}, you, to_valve, minutes_left-1)
-                best_so_far = max(best_so_far, consider)
+        travel_flow = flow_this_minute + graph.nodes[current_position]["rate"]
 
-        if elephant_can_open:
-            for to_valve in graph[you]:
-                consider = max_flow(open_valves|{elephant}, to_valve, elephant, minutes_left-1)
-                best_so_far = max(best_so_far, consider)
+        best_so_far = -1
 
-        for you_to, elephant_to in it.product(graph[you], graph[elephant]):
-            consider = max_flow(open_valves, you_to, elephant_to, minutes_left-1)
+        for to_valve in allowed_valves - open_valves:
+            travel_time = int(distances[current_position][to_valve])
+            if travel_time >= minutes_left:
+                continue
+
+            consider = travel_time*travel_flow + max_flow(open_valves, allowed_valves, to_valve, minutes_left-travel_time)
             best_so_far = max(best_so_far, consider)
 
-        result = best_so_far + flow_this_minute
-        cache[open_valves,you,elephant,minutes_left] = result
-        return result
+        if best_so_far == -1:
+            # if we cant get to any other openable valves in time we need to
+            # wait around and let current pressure out until the time runs out
+            return flow_this_minute + travel_flow * minutes_left
 
-    return max_flow(frozenset(), "AA", "AA", 26)
+        return best_so_far + flow_this_minute
+
+    return max(max_flow(frozenset(), frozenset(elephant_valves), "AA", 26) 
+               + max_flow(frozenset(), frozenset(working_valves)-frozenset(elephant_valves), "AA", 26)
+               for elephant_valves in mit.powerset(working_valves))
+
 
 if __name__ == "__main__":
     import aocd
