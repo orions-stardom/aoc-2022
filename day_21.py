@@ -24,15 +24,15 @@ def part_1(rawdata):
     monkeys = dict(line.split(":") for line in rawdata.splitlines())
     def solve(monkey:str) -> int:
         match monkeys[monkey].split():
-            case str() as n1, "+", str() as n2:
+            case n1, "+", n2:
                 return solve(n1) + solve(n2)
-            case str() as n1, "-", str() as n2:
+            case n1, "-", n2:
                 return solve(n1) - solve(n2)
-            case str() as  n1, "*", str() as n2:
+            case n1, "*", n2:
                 return solve(n1) * solve(n2)
-            case str() as  n1, "/", str() as n2:
+            case n1, "/", n2:
                 return solve(n1) // solve(n2)
-            case [str() as n]:
+            case [n]:
                 return int(n)
 
     return solve("root")
@@ -110,15 +110,15 @@ def part_2(rawdata):
             return solve(n1) == solve(n2)
 
         match job:
-            case str() as n1, "+", str() as n2:
+            case n1, "+", n2:
                 return solve(n1) + solve(n2) 
-            case str() as n1, "-", str() as n2:
+            case n1, "-", n2:
                 return solve(n1) - solve(n2)
-            case str() as  n1, "*", str() as n2:
+            case n1, "*", n2:
                 return solve(n1) * solve(n2)
-            case str() as  n1, "/", str() as n2:
+            case n1, "/", n2:
                 return solve(n1) // solve(n2)
-            case [str() as n]:
+            case [n]:
                 return int(n)
 
     return solve("root")
